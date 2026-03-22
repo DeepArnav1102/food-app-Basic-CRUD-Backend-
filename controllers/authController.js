@@ -1,4 +1,6 @@
 const userModel = require('../models/userModel');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 
 // register user
@@ -29,8 +31,11 @@ const registerController = async (req, res) => {
                 message: 'Email already exists' });
         }
 
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
         // Create new user
-        const newUser = new userModel({ username, email, password, phone });
+        const newUser = new userModel({ username, email, password: hashedPassword, phone });
         await newUser.save();
         res.status(201).send(
             {success: true,
@@ -62,16 +67,27 @@ const loginController = async (req, res) => {
         }
 
         // Check if user exists
-        const user = await userModel.findOne({ username, password });
+        const user = await userModel.findOne({ username });
         if (!user) {
             return res.status(400).send(
                 {success: false,
-                message: 'Invalid username or password' });
+                message: 'Invalid username' });
         }
+
+        // Check if password is correct
+        const isMatch = await bcrypt.compare(password, user.password);
+        const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_key, { expiresIn: '1d' });
+        if (!isMatch) {
+            return res.status(400).send(
+                {success: false,
+                message: 'Invalid password' });
+        }
+
         res.status(200).send(
             {success: true,
             message: 'User logged in successfully',
-            user: user });
+            jwtToken,
+            });
 
     }
     catch (error) {
