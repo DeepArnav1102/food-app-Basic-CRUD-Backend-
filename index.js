@@ -21,6 +21,7 @@ app.use(morgan('dev'));
 
 // Importing routes
 app.use('/api/v1/test',require('./routes/testroutes'));
+app.use('/api/v1/auth',require('./routes/authroutes'));
 
 app.get('/',(req,res)=>{
     res.send('Hello World');
