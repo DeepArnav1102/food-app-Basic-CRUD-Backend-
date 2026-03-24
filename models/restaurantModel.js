@@ -16,14 +16,13 @@ const restaurantSchema = new mongoose.Schema({
         required: [true, 'Food items are required'],
     },
     pickup: {
-        type: boolean,
+        type: Boolean,
         default: true,
     },
     delivery: {
-        type: boolean,
+        type: Boolean,
         default: true,
     }
 });
 
-const Restaurant = mongoose.model('Restaurant', restaurantSchema);
-module.exports = Restaurant;
+module.exports = mongoose.model('Restaurant', restaurantSchema);
