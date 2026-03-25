@@ -24,6 +24,7 @@ app.use('/api/v1/test',require('./routes/testroutes'));
 app.use('/api/v1/auth',require('./routes/authroutes'));
 app.use('/api/v1/user',require('./routes/userroutes'));
 app.use('/api/v1/restaurant',require('./routes/restaurantroutes'));
+app.use('/api/v1/category',require('./routes/categoryroutes'));
 
 app.get('/',(req,res)=>{
     res.send('Hello World');
