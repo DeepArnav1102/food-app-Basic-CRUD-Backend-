@@ -4,8 +4,8 @@ const bcrypt = require("bcryptjs");
 // get user info
 const getUserInfoController = async (req, res) => {
    try {
-        const userId = req.body.id;
-        const user = await userModel.findById(userId);
+        const {username} = req.body;
+        const user = await userModel.findOne({username});
         if (!user) {
             return res.status(404).send(
                 {success: false,
